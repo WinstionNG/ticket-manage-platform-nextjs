@@ -21,6 +21,18 @@ const NewIssuePage = () => {
   })
   const [error, setError] = useState<string>()
   const [submitLoading, setSubmitLoading] = useState(false)
+
+  const onSubmit = handleSubmit(async(data) => {
+    try {
+        setSubmitLoading(true)
+        await axios.post('/api/issues', data)
+        router.push('/issues')
+    }catch(err) {
+        setError('An unexpect error occur!')
+    }finally {
+        setSubmitLoading(false)
+    }
+})
   
   return (
     <div className='max-w-xl'>
@@ -29,17 +41,7 @@ const NewIssuePage = () => {
         </Callout.Root>}
     <form 
         className='space-y-3'
-        onSubmit={handleSubmit(async(data) => {
-            try {
-                setSubmitLoading(true)
-                await axios.post('/api/issues', data)
-                router.push('/issues')
-            }catch(err) {
-                setError('An unexpect error occur!')
-            }finally {
-                setSubmitLoading(false)
-            }
-        })}
+        onSubmit={onSubmit}
     >
       <TextField.Root>
         <TextField.Input placeholder='Title' {...register('title')}/>
