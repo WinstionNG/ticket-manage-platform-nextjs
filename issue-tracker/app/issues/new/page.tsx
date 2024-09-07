@@ -8,7 +8,8 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { z } from 'zod';
 import { createIssueSchema } from '@/app/validationSchemas';
-import { zodResolver} from '@hookform/resolvers/zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import ErrorMessage from '@/app/components/ErrorMessage';
 
 type IssueForm = z.infer<typeof createIssueSchema>
 
@@ -25,7 +26,7 @@ const NewIssuePage = () => {
             <Callout.Text>{error}</Callout.Text>
         </Callout.Root>}
     <form 
-        className=' space-y-3'
+        className='space-y-3'
         onSubmit={handleSubmit(async(data) => {
             try {
                 await axios.post('/api/issues', data)
@@ -38,13 +39,13 @@ const NewIssuePage = () => {
       <TextField.Root>
         <TextField.Input placeholder='Title' {...register('title')}/>
       </TextField.Root>
-      {errors.title && <Text color="red" as='p'>{errors.title.message}</Text>}
+      <ErrorMessage>{errors.title?.message}</ErrorMessage>
       <Controller 
         name='description'
         control={control}
         render={({field}) => <SimpleMDE placeholder='description' {...field}/>}
       />
-      {errors.description && <Text color="red" as='p'>{errors.description.message}</Text>}
+      <ErrorMessage>{errors.description?.message}</ErrorMessage>
       <Button>Submit New Issue</Button>
     </form>
     </div>
